@@ -1,0 +1,17 @@
+<!doctype html><html lang="fr"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Fixture de vérification</title><body data-profile="dev"><div id="root"></div><script type="module">
+// Test-only page: intentionally exercise API states without changing production code.
+const scenario = new URLSearchParams(location.search).get('api');
+const originalFetch = window.fetch.bind(window);
+localStorage.removeItem('publicProjects.v1');
+const { referenceProjects } = await import('../../shared/projects.js');
+window.fetch = async (url, options) => {
+  if (String(url).endsWith('/projects')) {
+    if (scenario === 'offline') throw new TypeError('API unavailable in test');
+    if (scenario === 'empty') return new Response(JSON.stringify({ data: [] }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    if (scenario === 'industry' || scenario === 'xss') return new Response(JSON.stringify({ data: [{ ...referenceProjects[0], category: 'industry', slug: 'fixture-industry', title: scenario === 'xss' ? '<img src=x onerror=alert(1)>' : '[TEST] Fixture industrie' }] }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    if (scenario === 'loading') await new Promise(resolve => setTimeout(resolve, 1800));
+  }
+  return originalFetch(url, options);
+};
+await import('/src/main.jsx');
+</script></body></html>

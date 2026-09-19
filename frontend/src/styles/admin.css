@@ -1,0 +1,29 @@
+.admin-shell { max-width: 1100px; margin: auto; padding: 28px 24px 80px; color: #e5eaf5; }
+.admin-header, .admin-heading, .admin-actions, .admin-project { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.admin-heading { margin-block: 48px 24px; }
+.admin-shell h1 { font-size: clamp(30px, 5vw, 48px); }
+.admin-shell h2 { font-size: 23px; margin-bottom: 12px; }
+.admin-shell h3 { margin-block: 24px 12px; }
+.admin-shell p { color: #b7c2d8; line-height: 1.7; margin-block: 10px; }
+.admin-panel { border: 1px solid #334155; border-radius: 18px; background: #101622; padding: 28px; }
+.login-panel { max-width: 470px; margin: 60px auto; }
+.admin-shell fieldset { border: 0; padding: 0; min-width: 0; }
+.admin-shell label { display: flex; flex-direction: column; gap: 8px; margin-block: 16px; font-size: 14px; }
+.admin-shell input, .admin-shell select, .admin-shell textarea { width: 100%; min-width: 0; color: #eef3ff; background: #090e18; border: 1px solid #526179; border-radius: 7px; padding: 12px; font: inherit; }
+.admin-shell textarea { resize: vertical; }
+.admin-shell button { color: #bcf3fa; border: 1px solid #3b596a; background: #142330; border-radius: 7px; padding: 11px 15px; }
+.admin-shell button:disabled { opacity: .5; cursor: wait; }
+.admin-shell :focus-visible { outline: 3px solid #93e2f1; outline-offset: 3px; }
+.admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+.admin-shell .check-label { flex-direction: row; align-items: center; }
+.admin-shell .check-label input { width: 20px; height: 20px; }
+.admin-project { padding-block: 22px; border-bottom: 1px solid #334155; flex-wrap: wrap; }
+.admin-project:last-child { border: 0; }
+.admin-shell .admin-actions { justify-content: start; flex-wrap: wrap; }
+.admin-shell .danger { color: #fecaca; border-color: #b45f69; background: #361b27; }
+.admin-shell [role="alert"] { color: #ffc0b0; }
+.feature-editor { border-left: 2px solid #526179; padding-left: 20px; }
+.delete-dialog { color: #eef3ff; margin: auto; width: min(520px, calc(100% - 32px)); }
+.delete-dialog::backdrop { background: #000b; }
+.admin-note { font-size: 12px; }
+@media (max-width: 600px) { .admin-grid { grid-template-columns: 1fr; } .admin-panel { padding: 20px; } .admin-heading { align-items: start; flex-direction: column; } .admin-shell { padding-inline: 16px; } }

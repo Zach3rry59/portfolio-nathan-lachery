@@ -1,0 +1,24 @@
+.fx-toggle { background: transparent; color: var(--accent); padding: 12px 5px; font: 10px Consolas, monospace; white-space: nowrap; }
+.fx-toggle span { margin-left: 4px; }
+.skill-group h3 { font-size: 11px; color: #9ca8bf; margin-bottom: 15px; }
+.timeline-entry h3 { font-size: 15px; line-height: 1.4; font-weight: 500; }
+.certificate-placeholder { font: 9px Consolas, monospace; color: var(--accent) !important; overflow-wrap: anywhere; }
+.star-drift { position: absolute; inset: -8%; }
+.star { opacity: var(--star-alpha); }
+.skills-block, .journey { margin-top: 35px; padding-top: 0; border-top: 0; }
+.skills-block .subheading h2 { font-size: 32px; margin-top: 24px; }
+.journey-label h2 { margin: 20px 0; }
+[data-fx='full'] .star-drift { animation: star-drift 20s linear infinite alternate; }
+[data-fx='full'] .star:nth-child(4n) { animation: twinkle 5s var(--star-delay) ease-in-out infinite alternate; }
+[data-fx='full'] .nebula { animation: nebula-drift 16s ease-in-out infinite alternate; }
+[data-fx='full'] .orbital { animation: orbital-drift 18s ease-in-out infinite alternate; }
+[data-fx='full'] .system-orbit--two { animation: orbit-turn 70s linear infinite; }
+[data-fx='reduced'] *, [data-fx='reduced'] *::before, [data-fx='reduced'] *::after { animation: none !important; transition-duration: .05s !important; }
+[data-fx='reduced'] .cursor-light { display: none; }
+@keyframes gradient-drift { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+@keyframes star-drift { from { transform: translate3d(-16px, 18px, 0); } to { transform: translate3d(35px, -34px, 0); } }
+@keyframes twinkle { from { opacity: .12; } to { opacity: .8; } }
+@keyframes nebula-drift { from { transform: translate3d(-6%, -4%, 0) scale(.95) rotate(-5deg); } to { transform: translate3d(7%, 5%, 0) scale(1.13) rotate(5deg); } }
+@keyframes orbital-drift { from { transform: translate3d(0,-9px,0) rotate(-2deg); } to { transform: translate3d(0,12px,0) rotate(3deg); } }
+@keyframes orbit-turn { to { transform: rotate(360deg); } }
+@media(max-width:600px) { .header { padding-inline: 12px; } .header-actions { gap: 5px; } .profile-toggle { min-width: 101px; gap: 6px; } .fx-toggle { font-size: 9px; } .header .brand { font-size: 22px; } }

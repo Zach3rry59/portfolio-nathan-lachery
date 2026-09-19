@@ -1,0 +1,163 @@
+body.cinematic { height: 100dvh; overflow: hidden; }
+.cinema-stage { position: fixed; inset: 0 0 58px; perspective: 1400px; overflow: hidden; outline: none; }
+.scene-layer { position: absolute; inset: 0; transform-origin: 50% 50%; opacity: 0; visibility: hidden; }
+.scene-layer:first-child { opacity: 1; visibility: visible; }
+.scene-reader { height: 100%; overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; scrollbar-color: #61718b55 transparent; overscroll-behavior: contain; }
+.scene-layer .section { padding: 116px 0 28px; min-height: 100%; display: flex; align-items: center; }
+.scene-layer .section > .container { width: min(1160px, calc(100% - 112px)); }
+.scene-layer .section-label { padding-bottom: 18px; }
+.scene-layer .profile-intro { padding-top: 32px; }
+.scene-layer .intro-columns { margin-top: 34px; gap: 70px; }
+.scene-layer .section h2 { font-size: clamp(32px, 4vw, 58px); }
+.scene-layer .profile-copy { font-size: 14px; }
+.scene-layer .profile-symbol { margin-bottom: 10px; }
+.scene-layer .profile-identity h3 { font-size: 23px; }
+.scene-layer .skills-block { margin-top: 32px; }
+.scene-layer .subheading h2 { font-size: 32px; }
+.scene-layer .journey { margin-top: 30px; gap: 65px; }
+.scene-layer .journey-label { position: static; }
+.scene-layer .journey-label h2 { font-size: 43px; }
+.scene-layer .timeline-entry { padding-bottom: 20px; }
+.scene-layer .timeline-title { margin-bottom: 20px; }
+@media (min-width: 801px) {
+  .scene-layer #training .timeline-entry { padding-bottom: 15px; }
+  .scene-layer #training .entry-organization { margin-top: 4px; }
+  .scene-layer #training .entry-description { margin-top: 4px; line-height: 1.5; }
+}
+.scene-layer .hero { min-height: 100%; height: 100%; border: 0; }
+.scene-layer .hero-content { padding-top: 125px; }
+.scene-layer .hero-heading { padding-top: 35px; padding-bottom: 30px; }
+.scene-layer .hero h1 { font-size: clamp(90px, min(11.7vw, 16vh), 172px); }
+.scene-layer .hero-prelude { margin-bottom: 18px; }
+.scene-layer .hero-baseline { margin: 22px 0 15px; }
+.scene-layer .profile-choice { padding: 20px; }
+.scene-layer .choice-top { margin-bottom: 20px; }
+.scene-layer .portfolio-heading { margin: 24px 0; }
+.scene-layer .portfolio-heading h2 { font-size: 36px; }
+.scene-layer .project-art { min-height: 350px; padding: 20px; }
+.scene-layer .key-system { height: 220px; }
+.scene-layer .system-orbit { width: 220px; height: 220px; }
+.scene-layer .system-orbit--two { width: 160px; height: 160px; }
+.scene-layer .key-core { width: 100px; height: 100px; }
+.scene-layer .key-core svg { width: 65px; }
+.scene-layer .node-users { top: 7px; }
+.scene-layer .node-access { bottom: 8px; }
+.scene-layer .node-live { top: 46px; }
+.scene-layer .art-bottom strong { font-size: 26px; }
+.scene-layer .project-info { padding: 22px 28px; }
+.scene-layer .project-info h3 { font-size: 29px; margin-top: 17px; }
+.scene-layer .project-info > p:not(.project-context) { margin-top: 12px; line-height: 1.7; }
+.scene-layer .project-tags { margin-top: 15px; }
+.scene-layer .button { margin-top: 18px; padding-block: 11px; }
+.scene-layer .project-details { margin-top: 12px; }
+.scene-layer .project-details summary { padding-top: 10px; }
+.scene-layer .github-band { padding: 6px 0; margin-top: 4px; }
+.scene-layer .github-band > span:nth-child(2) { font-size: 12px; }
+.scene-layer .contact-section { min-height: 0; padding-bottom: 28px; }
+.scene-layer .contact-content { padding-top: 35px; }
+.scene-layer .contact-content h2 { font-size: clamp(60px, 9.5vw, 130px); margin-block: 12px 20px; }
+.scene-layer .contact-links { margin-top: 22px; }
+.scene-layer .contact-meta { margin-top: 18px; }
+.scene-layer .footer-top { padding-block: 22px; }
+.scene-layer .footer-bottom { padding-block: 16px; }
+.timeline-controls { position: fixed; z-index: 35; left: 0; right: 0; bottom: 0; height: 58px; display: flex; align-items: center; justify-content: center; gap: 18px; padding: 8px 24px; background: #090d16ed; border-top: 1px solid var(--line); }
+.timeline-controls button { width: 34px; height: 34px; background: transparent; color: var(--accent); font-size: 18px; border: 1px solid var(--line); border-radius: 50%; }
+.timeline-controls button:disabled { opacity: .25; cursor: default; }
+.wheel-help { color: #929eb4; font-size: 10px; margin-right: auto; }
+.scene-count { font: 11px Consolas, monospace; color: var(--accent); white-space: nowrap; }
+.scene-count span { color: #7f8aa0; }
+.timeline-slider { width: min(26vw, 270px); display: flex; }
+.timeline-slider input { width: 100%; accent-color: var(--accent); height: 22px; cursor: ew-resize; }
+.scene-name { font-size: 11px; width: 80px; color: #b4bfd2; }
+.timeline-controls > button:last-child { margin-right: auto; }
+@media (max-height: 780px) and (min-width: 801px) {
+  .scene-layer .hero-content { padding-top: 105px; }
+  .scene-layer .hero-heading { padding-top: 24px; padding-bottom: 20px; }
+  .scene-layer .hero h1 { font-size: min(11.7vw, 16vh); }
+  .scene-layer .hero-subtitle { font-size: 14px; line-height: 1.6; margin-top: 5px; }
+  .scene-layer .hero-caption p { font-size: 14px; }
+  .scene-layer .hero-baseline { margin-top: 18px; }
+  .scene-layer .choice-top { margin-bottom: 13px; }
+  .scene-layer .profile-choice { padding: 16px 20px; }
+  .scene-layer .portfolio-heading { margin-block: 16px; }
+  .scene-layer .portfolio-heading h2 { font-size: 29px; }
+  .scene-layer .project-art { min-height: 330px; }
+  .scene-layer .section { padding-top: 106px; }
+  .scene-layer .contact-content { padding-top: 24px; }
+  .scene-layer .contact-content h2 { font-size: 80px; }
+}
+@media (max-width: 800px) {
+  .scene-layer .section > .container { width: calc(100% - 48px); }
+  .scene-layer .hero-content { padding-top: 115px; }
+  .scene-layer .hero h1 { font-size: 115px; }
+  .scene-layer .intro-columns { gap: 30px; }
+  .scene-layer .journey { gap: 30px; }
+  .wheel-help { display: none; }
+  .timeline-controls > button:last-child { margin-right: 0; }
+}
+@media (max-width: 600px) {
+  .cinema-stage { bottom: 55px; }
+  .timeline-controls { height: 55px; padding: 7px 12px; gap: 12px; }
+  .scene-name { font-size: 10px; width: 66px; }
+  .timeline-slider { flex: 1; max-width: 160px; }
+  .scene-count { font-size: 9px; }
+  .scene-layer .section { padding: 100px 0 25px; align-items: start; }
+  .scene-layer .section > .container { width: calc(100% - 40px); }
+  .scene-layer .section h2 { font-size: 30px; }
+  .scene-layer .section-label { padding-bottom: 15px; font-size: 8px; }
+  .scene-layer .profile-intro { padding-top: 22px; }
+  .scene-layer .intro-columns { margin-top: 24px; gap: 24px; }
+  .scene-layer .profile-copy { font-size: 13px; line-height: 1.7; }
+  .scene-layer .profile-identity h3 { font-size: 20px; margin-bottom: 10px; }
+  .scene-layer .profile-symbol { font-size: 23px; margin-bottom: 7px; }
+  .scene-layer .objective { margin-top: 15px; font-size: 12px; }
+  .scene-layer .text-link { margin-top: 18px; }
+  .scene-layer .hero { min-height: 100%; height: auto; }
+  .scene-layer .hero-content { padding-top: 108px; }
+  .scene-layer .hero-heading { padding-top: 35px; padding-bottom: 28px; }
+  .scene-layer .hero h1 { font-size: clamp(76px, 21vw, 120px); }
+  .scene-layer .hero-subtitle { font-size: 12px; }
+  .scene-layer .profile-choice { padding: 16px 12px; }
+  .scene-layer .choice-top { margin-bottom: 18px; }
+  .scene-layer .choice-title { font-size: 12px; }
+  .scene-layer .hero-baseline { margin-top: 20px; }
+  .scene-layer .hero-baseline .mono { display: none; }
+  .scene-layer .skills-block { margin-top: 24px; gap: 25px; }
+  .scene-layer .subheading h2 { font-size: 27px; margin-top: 12px; }
+  .scene-layer .subheading > .mono { display: none; }
+  .scene-layer .personal-note { margin-top: 18px; }
+  .scene-layer .skill-group { padding-bottom: 14px; }
+  .scene-layer .skill-group + .skill-group { padding-top: 14px; }
+  .scene-layer .skill-group h3 { margin-bottom: 10px; }
+  .scene-layer .skill-group .tags span { font-size: 11px; padding: 6px 10px; }
+  .scene-layer .journey { margin-top: 22px; gap: 23px; }
+  .scene-layer .journey-label > .mono, .scene-layer .journey-label p { display: none; }
+  .scene-layer .journey-label h2 { font-size: 28px; margin: 0; }
+  .scene-layer .journey-label h2 br { display: none; }
+  .scene-layer .journey-label h2 br::after { content: ' '; }
+  .scene-layer .timeline-entry h3 { font-size: 14px; }
+  .scene-layer .entry-description { font-size: 12px; line-height: 1.65; }
+  .scene-layer .timeline-entry { padding-bottom: 22px; }
+  .scene-layer #training .timeline-entry { padding-bottom: 13px; }
+  .scene-layer #training .entry-description { margin-top: 4px; font-size: 11px; }
+  .scene-layer #training .entry-organization { margin-top: 4px; }
+  .scene-layer .portfolio-heading { margin: 20px 0; }
+  .scene-layer .portfolio-heading h2 { font-size: 27px; }
+  .scene-layer .portfolio-heading > p { display: none; }
+  .scene-layer .project-art { min-height: 140px; padding: 12px 15px; }
+  .scene-layer .key-system { height: 100px; }
+  .scene-layer .system-orbit { width: 100px; height: 100px; }
+  .scene-layer .system-orbit--two { width: 80px; height: 80px; }
+  .scene-layer .key-core { width: 60px; height: 60px; border-radius: 16px; }
+  .scene-layer .key-core svg { width: 48px; }
+  .scene-layer .art-bottom strong { display: none; }
+  .scene-layer .art-bottom .mono { font-size: 6px; max-width: none; }
+  .scene-layer .system-node { font-size: 8px; padding: 7px; }
+  .scene-layer .node-live { top: 50px; right: -3px; }
+  .scene-layer .project-info { padding: 20px; }
+  .scene-layer .github-band { display: none; }
+  .scene-layer .project-info h3 { font-size: 25px; margin-top: 13px; }
+  .scene-layer .contact-content { padding-top: 36px; }
+  .scene-layer .contact-content h2 { font-size: clamp(47px, 13.5vw, 76px); }
+  .scene-layer .footer-top { gap: 18px; }
+}

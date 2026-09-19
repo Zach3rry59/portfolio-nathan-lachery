@@ -1,0 +1,30 @@
+{
+  "name": "portfolio-nathan-lachery",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:frontend": "node scripts/frontend.mjs",
+    "dev:backend": "node --watch backend/src/server.js",
+    "build": "node scripts/frontend.mjs build",
+    "lint": "eslint frontend/src backend/src backend/test frontend/test shared scripts eslint.config.js",
+    "test:integration": "node --test backend/test/mongodb.integration.mjs",
+    "admin:password": "node scripts/hash-password.mjs",
+    "test": "node --test backend/test/*.test.js frontend/test/*.test.js",
+    "start": "node backend/src/server.js",
+    "seed": "node backend/src/seed.js"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^17.12.0"
+  }
+}

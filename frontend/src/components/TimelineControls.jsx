@@ -1,0 +1,5 @@
+export const sceneLabels = { home: 'Accueil', profile: 'Profil', skills: 'Compétences', experience: 'Expériences', training: 'Formations', portfolio: 'Portfolio', contact: 'Contact' };
+export default function TimelineControls({ ids, active, onStep, onSeek }) {
+  const index = ids.indexOf(active);
+  return <div className="timeline-controls" aria-label="Progression dans le portfolio"><span className="wheel-help">Molette ↑ avancer · ↓ reculer</span><button onClick={() => onStep(-1)} disabled={index === 0} aria-label="Scène précédente">←</button><span className="scene-count" role="status">{String(index + 1).padStart(2,'0')} <span>/ {String(ids.length).padStart(2,'0')}</span></span><label className="timeline-slider"><span className="sr-only">Progression dans le parcours</span><input id="timeline-range" type="range" min="0" max={ids.length-1} step="0.001" defaultValue="0" aria-valuetext={sceneLabels[active]} onChange={event => onSeek(Number(event.target.value))}/></label><span className="scene-name">{sceneLabels[active]}</span><button onClick={() => onStep(1)} disabled={index === ids.length - 1} aria-label="Scène suivante">→</button></div>;
+}

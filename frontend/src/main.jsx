@@ -1,0 +1,13 @@
+import React, { lazy, Suspense } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App.jsx';
+import './styles/base.css';
+import './styles/hero.css';
+import './styles/sections.css';
+import './styles/react.css';
+import './styles/cinema.css';
+import './styles/forms.css';
+const Admin = lazy(() => import('./admin/Admin.jsx'));
+const Privacy = lazy(() => import('./components/Privacy.jsx'));
+const page = location.pathname.replace(/\/$/, '');
+createRoot(document.getElementById('root')).render(<React.StrictMode><Suspense fallback={<p role="status">Chargement…</p>}>{page === '/admin' ? <Admin/> : page === '/privacy' ? <Privacy/> : <App/>}</Suspense></React.StrictMode>);
