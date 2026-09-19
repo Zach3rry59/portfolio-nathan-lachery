@@ -1,4 +1,4 @@
-FROM node:24-alpine AS dependencies
+FROM node:25-alpine AS dependencies
 WORKDIR /app
 RUN npm install --global pnpm@11.19.0
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
@@ -6,7 +6,7 @@ COPY backend/package.json backend/package.json
 COPY frontend/package.json frontend/package.json
 RUN pnpm install --frozen-lockfile --prod --filter backend --ignore-scripts
 
-FROM node:24-alpine AS runtime
+FROM node:25-alpine AS runtime
 ENV NODE_ENV=production HOST=0.0.0.0 PORT=3001
 WORKDIR /app
 COPY --from=dependencies /app/node_modules ./node_modules
