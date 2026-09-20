@@ -1,5 +1,7 @@
 # Nathan Lachery — Portfolio
 
+**Site public : [portfolio-nathan-lachery.pages.dev](https://portfolio-nathan-lachery.pages.dev)**
+
 CV interactif à deux profils, Développement et Industrie. La molette vers le haut avance, vers le bas recule, dans un viewport fixe. Les boutons, le clavier et la progression offrent d’autres moyens de navigation.
 
 ## Stack
