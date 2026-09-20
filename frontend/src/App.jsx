@@ -15,9 +15,9 @@ export default function App() {
   const stageRef = useRef(null);
   const effects = useEffects();
   const profile = profiles[profileKey];
-  const projectState = useProjects();
   const category = profileKey === 'dev' ? 'dev' : 'industry';
-  const projects = projectState.projects.filter(project => project.category === category);
+  const projectState = useProjects(category);
+  const projects = projectState.projects;
   const hasProjects = projects.length > 0;
   const ids = ['home', 'profile', 'skills', 'experience', 'training', ...(hasProjects ? ['portfolio'] : []), 'contact'];
   const cinema = useCinema(ids, effects.mode === 'full', stageRef);

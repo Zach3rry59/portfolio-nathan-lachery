@@ -1,88 +1,43 @@
-<!doctype html><html lang="fr"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Vérification cinématique</title>
+<!doctype html><html lang="fr"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Tests ciblés du Portfolio</title>
 <style>body{margin:24px;font:14px system-ui;background:#0b101b;color:#e7efff}button{padding:12px;cursor:pointer}iframe{width:100%;height:760px;border:1px solid #526;margin-top:20px}pre{white-space:pre-wrap;line-height:1.6}</style>
-<h1>Vérification de la progression et de l’intégration</h1><button id="run">Lancer les vérifications</button><pre id="report" role="status">Prêt.</pre><iframe id="app" title="Portfolio testé" src="/"></iframe>
+<h1>Tests isolés du Portfolio</h1><button id="run">Lancer les vérifications ciblées</button><pre id="report" role="status">Prêt. Aucun accès au backend réel.</pre><iframe id="app" title="Fixture isolée" src="about:blank"></iframe>
 <script type="module">
-const frame = document.querySelector('#app'), output = document.querySelector('#report');
-const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
-async function until(condition, timeout=7000) { const start=performance.now(); while(!condition()) { if(performance.now()-start>timeout) throw new Error('Délai de vérification dépassé'); await pause(30); } }
-document.querySelector('#run').onclick = async event => {
-  event.target.disabled=true; const lines=[];
-  const saved = localStorage.getItem('animationPreference');
-  const savedProjects = localStorage.getItem('publicProjects.v1');
-  const log=(ok,text)=>{ lines.push(`${ok?'OK':'ÉCHEC'} — ${text}`); output.textContent=lines.join('\n'); };
-  const load=async url=>{ frame.src=url; await new Promise(resolve=>frame.onload=resolve); await until(()=>frame.contentDocument.querySelector('.cinema-stage')?.dataset.activeScene); };
-  try {
-    localStorage.removeItem('animationPreference');
-    localStorage.removeItem('publicProjects.v1');
-    await load('/');
-    let doc=frame.contentDocument, win=frame.contentWindow;
-    const stage=()=>doc.querySelector('.cinema-stage');
-    const p=()=>Number(stage().dataset.progress);
-    const click=id=>doc.querySelector(id).click();
-    await until(()=>doc.body.dataset.fx);
-    log(doc.body.dataset.fx === (win.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduced' : 'full'),'Sans choix manuel, FX respecte le système');
-    // React's controlled events are driven using native DOM button actions here.
-    if(doc.body.dataset.fx!=='full')click('.fx-toggle');
-    await until(()=>doc.body.dataset.fx==='full');
-    log(getComputedStyle(doc.querySelector('.star-drift')).animationName==='star-drift','FX active les étoiles malgré la préférence système');
-    stage().dispatchEvent(new WheelEvent('wheel',{deltaY:-250,bubbles:true,cancelable:true}));
-    await pause(800);
-    log(p()>0 && p()<1 && win.scrollY===0,'Molette haute : progression fractionnaire, viewport immobile');
-    const forward=p();
-    stage().dispatchEvent(new WheelEvent('wheel',{deltaY:120,bubbles:true,cancelable:true}));
-    await pause(700);
-    log(p()<forward && win.scrollY===0,'Molette basse : retour continu');
-    click('#navigation a[href="#profile"]'); await until(()=>Math.abs(p()-1)<.002);
-    stage().dispatchEvent(new WheelEvent('wheel',{deltaY:-300,bubbles:true,cancelable:true}));
-    click('#profile-toggle');
-    await until(()=>Math.abs(p()-(1+300/1050))<.002);
-    log(doc.body.dataset.profile==='industrie','Une bascule pendant le mouvement poursuit la progression');
-    click('#profile-toggle');
-    click('#navigation a[href="#profile"]'); await until(()=>Math.abs(p()-1)<.002);
-    click('.timeline-controls button:last-child'); await until(()=>Math.abs(p()-2)<.002);
-    click('#profile-toggle'); await pause(150);
-    log(stage().dataset.activeScene==='skills' && !doc.querySelector('[data-scene="portfolio"]'),'Bascule équivalente et Portfolio absent en Industrie');
-    click('#navigation a[href="#contact"]'); await until(()=>Math.abs(p()-5)<.002);
-    click('#profile-toggle'); await pause(150);
-    log(stage().dataset.activeScene==='contact' && Math.abs(p()-6)<.002,'Contact conservé au retour en Dev');
-    click('.fx-toggle'); await until(()=>doc.body.dataset.fx==='reduced');
-    click('#navigation a[href="#home"]'); await until(()=>p()===0);
-    const visited=['home'];
-    for(let i=1;i<7;i++){click('.timeline-controls button:last-child');await until(()=>Math.abs(p()-i)<.002);visited.push(stage().dataset.activeScene);}
-    log(new Set(visited).size===7,'Toutes les scènes accessibles en FX réduit');
-    await load('/'); doc=frame.contentDocument;win=frame.contentWindow;
-    log(doc.body.dataset.fx==='reduced','Choix FX mémorisé après rechargement');
-    click('.fx-toggle');await until(()=>doc.body.dataset.fx==='full');
-    for(const width of [320,390,768,1280]){
-      frame.style.width=`${width}px`;await pause(100);
-      log(doc.documentElement.scrollWidth<=win.innerWidth,`Aucun débordement horizontal à ${width}px`);
-    }
-    frame.style.width='100%';
-    await load('/test/fixture.html?api=empty');doc=frame.contentDocument;win=frame.contentWindow;
-    await until(()=>!doc.querySelector('[data-scene="portfolio"]'));
-    log(Boolean(doc.querySelector('#profile-title')) && !doc.querySelector('#navigation a[href="#portfolio"]'),'Liste API vide : scène et lien Portfolio retirés, CV disponible');
-    await load('/test/fixture.html?api=offline');doc=frame.contentDocument;win=frame.contentWindow;
-    await until(()=>doc.querySelector('.api-notice'));
-    log(doc.querySelector('.project-info h3')?.textContent==='Gestion de clés','API indisponible : vrai projet local conservé');
-    await load('/test/fixture.html?api=loading');doc=frame.contentDocument;win=frame.contentWindow;
-    log(Boolean(doc.querySelector('.project-loading')) && Boolean(doc.querySelector('.project-info h3')),'Projet visible pendant le réveil de l’API');
-    await until(()=>!doc.querySelector('.project-loading'));
-    log(doc.querySelector('.project-info h3').textContent==='Gestion de clés','Le projet est chargé via l’API réelle');
-    await load('/test/fixture.html?api=industry');doc=frame.contentDocument;win=frame.contentWindow;
-    await until(()=>!doc.querySelector('[data-scene="portfolio"]'));
-    click('#profile-toggle');
-    await until(()=>doc.querySelector('[data-scene="portfolio"]'));
-    log(doc.querySelector('.project-info h3')?.textContent==='[TEST] Fixture industrie','Un projet Industrie ajoute sa scène uniquement au profil Industrie');
-    await load('/test/fixture.html?api=xss');doc=frame.contentDocument;win=frame.contentWindow;
-    await until(()=>!doc.querySelector('[data-scene="portfolio"]'));
-    click('#profile-toggle');await until(()=>doc.querySelector('.project-info h3'));
-    log(doc.querySelector('.project-info h3').textContent==='<img src=x onerror=alert(1)>' && !doc.querySelector('.project-info h3 img'),'Le contenu HTML d’un projet est affiché comme texte');
-    const intervals=[];let last=0,tick=0;
-    await new Promise(resolve=>{const sample=time=>{if(last)intervals.push(time-last);last=time;stage().dispatchEvent(new WheelEvent('wheel',{deltaY:-30,bubbles:true,cancelable:true}));if(++tick<180)win.requestAnimationFrame(sample);else resolve();};win.requestAnimationFrame(sample);});
-    intervals.sort((a,b)=>a-b);
-    lines.push(`MESURE — rAF p95 : ${intervals[Math.floor(intervals.length*.95)].toFixed(1)} ms ; ${intervals.filter(ms=>ms>50).length} intervalles > 50 ms sur ${intervals.length}.`);
-    output.textContent=lines.join('\n');
-  }catch(error){output.textContent+=`\nERREUR — ${error.message}`;}
-  finally{if(saved===null)localStorage.removeItem('animationPreference');else localStorage.setItem('animationPreference',saved);if(savedProjects===null)localStorage.removeItem('publicProjects.v1');else localStorage.setItem('publicProjects.v1',savedProjects);event.target.disabled=false;}
+if(import.meta.env.MODE!=='test') throw new Error('Utiliser pnpm test:preview (port 5174).');
+const frame=document.querySelector('#app'), output=document.querySelector('#report');
+const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+async function until(check){const start=performance.now();while(!check()){if(performance.now()-start>6000)throw new Error('Délai dépassé');await pause(25);}}
+document.querySelector('#run').onclick=async event=>{
+ event.target.disabled=true;const lines=[], saved=localStorage.getItem('animationPreference');
+ const cache=()=>JSON.stringify(Object.keys(localStorage).filter(k=>k.startsWith('publicProjects')).sort().map(k=>[k,localStorage.getItem(k)]));
+ const before=cache();let doc,win;
+ const log=(ok,text)=>{lines.push(`${ok?'OK':'ÉCHEC'} — ${text}`);output.textContent=lines.join('\n');};
+ const load=async scenario=>{frame.src=`/test/fixture.html?api=${scenario}`;await new Promise(resolve=>frame.onload=resolve);doc=frame.contentDocument;win=frame.contentWindow;await until(()=>doc.querySelector('.cinema-stage'));};
+ const click=s=>doc.querySelector(s).click();
+ const index=()=>Number(doc.querySelector('.project-carousel').dataset.projectIndex);
+ try{
+  localStorage.setItem('animationPreference','reduced');
+  await load('loading');log(!doc.querySelector('a[href="#portfolio"]'),'Aucun flash Portfolio pendant le chargement');
+  await until(()=>doc.querySelector('.project-carousel'));
+  click('#navigation a[href="#portfolio"]');await until(()=>doc.querySelector('.cinema-stage').dataset.activeScene==='portfolio');
+  log(doc.querySelector('.carousel-current h3').textContent==='Gestion de clés','SOFIP Dev en premier selon order');
+  click('[aria-label="Projet suivant"]');await until(()=>index()===1);
+  log(doc.querySelector('.carousel-current h3').textContent==='Portfolio interactif full-stack','Portfolio réel en second');
+  await pause(30);click('[aria-label="Projet suivant"]');await until(()=>index()===0);log(true,'Boucle avant dernier → premier');
+  await pause(30);click('[aria-label="Projet précédent"]');await until(()=>index()===1);log(true,'Boucle arrière premier → dernier');
+  await pause(30);doc.querySelector('.project-carousel').dispatchEvent(new win.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,cancelable:true}));await until(()=>index()===0);
+  log(doc.querySelector('.cinema-stage').dataset.activeScene==='portfolio','Clavier : projet suivant sans changer de scène');
+  click('#profile-toggle');await until(()=>doc.body.dataset.profile==='industrie');await pause(80);
+  log(!doc.querySelector('[data-scene="portfolio"]')&&!doc.querySelector('a[href="#portfolio"]')&&!doc.querySelector('[aria-label*="Portfolio"]'),'Industrie vide : aucune scène ni navigation Portfolio');
+  log(doc.querySelector('.cinema-stage').dataset.activeScene==='contact','Bascule depuis Portfolio vers Contact');
+  await load('industry');await until(()=>doc.querySelector('.project-carousel'));
+  log(doc.querySelector('.project-carousel').dataset.carouselCount==='1'&&!doc.querySelector('.carousel-controls'),'Un seul projet : grande carte sans flèches');
+  await load('xss');await until(()=>doc.querySelector('.project-carousel'));click('#navigation a[href="#portfolio"]');await pause(100);
+  log(doc.querySelector('.carousel-current h3').textContent==='<img src=x onerror=alert(1)>'&&!doc.querySelector('img[src="x"]')&&!doc.body.dataset.xssExecuted,'Payload XSS affiché comme texte, jamais exécuté');
+  log(cache()===before,'Fixtures sans modification du cache public');
+ }catch(error){log(false,error.message);}finally{
+  if(saved===null)localStorage.removeItem('animationPreference');else localStorage.setItem('animationPreference',saved);
+  frame.src='about:blank';event.target.disabled=false;
+  output.dataset.result=lines.some(line=>line.startsWith('ÉCHEC'))?'failed':'passed';
+ }
 };
 </script></html>

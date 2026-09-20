@@ -25,13 +25,13 @@ pnpm run build
 docker compose up --build -d --wait
 ```
 
-Le build frontend est produit dans `frontend/dist`. Docker Compose lance le backend et une base MongoDB locale isolée, sans publier le port de MongoDB. `pnpm run seed` ajoute le projet confirmé de référence sans écraser un projet existant.
+Le build frontend est produit dans `frontend/dist`. Docker Compose lance le backend et une base MongoDB locale isolée, sans publier le port de MongoDB. `pnpm run seed` ajoute les deux projets Dev confirmés (SOFIP et ce portfolio) sans écraser un projet existant.
 
 ## Administration
 
 La route `/admin` permet de créer, modifier et supprimer des projets `dev` ou `industry`. Configurer `ADMIN_EMAIL` et générer `ADMIN_PASSWORD_HASH` avec `pnpm run admin:password`. Le mot de passe se saisit dans le terminal sans affichage. Les sessions expirent après une heure, restent uniquement en mémoire dans le navigateur et sont révoquées à la déconnexion.
 
-Un profil sans projet n’affiche ni scène ni lien Portfolio. Le bouton FX respecte la préférence système puis conserve le choix manuel. Les données de secours ne contiennent aucun projet Industrie inventé.
+À partir de deux projets, une carte principale forme un carousel infini, navigable par flèches, clavier et glissement. Les projets suivent leur champ `order` ; les parcours professionnels conservent toujours une chronologie décroissante identique dans les deux profils. Un profil sans projet n’affiche ni scène ni lien Portfolio. Le bouton FX respecte la préférence système puis conserve le choix manuel. Les données de secours ne contiennent aucun projet Industrie inventé.
 
 ## Documentation
 

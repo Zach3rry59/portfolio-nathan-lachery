@@ -93,7 +93,7 @@ export function useCinema(ids, full, stageRef) {
       seek(wheelProgress(state.current.target, delta, state.current.ids.length));
     }
     function keyboard(event) {
-      if (editable(event.target) || event.altKey || event.ctrlKey || event.metaKey) return;
+      if (event.defaultPrevented || editable(event.target) || event.altKey || event.ctrlKey || event.metaKey) return;
       if (event.target.closest('button, a, summary') && [' ', 'Enter'].includes(event.key)) return;
       if (['ArrowUp','PageUp','ArrowRight'].includes(event.key)) { event.preventDefault(); step(1); }
       if (['ArrowDown','PageDown','ArrowLeft'].includes(event.key)) { event.preventDefault(); step(-1); }
@@ -101,7 +101,7 @@ export function useCinema(ids, full, stageRef) {
       if (event.key === 'End') { event.preventDefault(); seek(state.current.ids.length - 1); }
     }
     let previousY = null;
-    function touchStart(event) { if (event.touches.length === 1 && !editable(event.target) && !event.target.closest('a,button,summary')) previousY = event.touches[0].clientY; }
+    function touchStart(event) { if (event.touches.length === 1 && !editable(event.target) && !event.target.closest('a,button,summary,.project-carousel')) previousY = event.touches[0].clientY; }
     function touchMove(event) {
       if (previousY === null || event.touches.length !== 1) return;
       const reader = event.target.closest('.scene-reader');

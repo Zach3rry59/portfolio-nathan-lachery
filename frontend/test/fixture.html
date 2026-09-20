@@ -1,17 +1,19 @@
-<!doctype html><html lang="fr"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Fixture de vérification</title><body data-profile="dev"><div id="root"></div><script type="module">
-// Test-only page: intentionally exercise API states without changing production code.
-const scenario = new URLSearchParams(location.search).get('api');
-const originalFetch = window.fetch.bind(window);
-localStorage.removeItem('publicProjects.v1');
+<!doctype html><html lang="fr"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>TEST ISOLÉ — Portfolio</title><body data-profile="dev"><div id="root"></div><script type="module">
+if (import.meta.env.MODE !== 'test') throw new Error('Fixtures réservées au serveur test sur le port 5174.');
 const { referenceProjects } = await import('../../shared/projects.js');
-window.fetch = async (url, options) => {
-  if (String(url).endsWith('/projects')) {
-    if (scenario === 'offline') throw new TypeError('API unavailable in test');
-    if (scenario === 'empty') return new Response(JSON.stringify({ data: [] }), { status: 200, headers: { 'Content-Type': 'application/json' } });
-    if (scenario === 'industry' || scenario === 'xss') return new Response(JSON.stringify({ data: [{ ...referenceProjects[0], category: 'industry', slug: 'fixture-industry', title: scenario === 'xss' ? '<img src=x onerror=alert(1)>' : '[TEST] Fixture industrie' }] }), { status: 200, headers: { 'Content-Type': 'application/json' } });
-    if (scenario === 'loading') await new Promise(resolve => setTimeout(resolve, 1800));
-  }
-  return originalFetch(url, options);
+const scenario = new URLSearchParams(location.search).get('api') || 'normal';
+const data = structuredClone(referenceProjects);
+if (scenario === 'xss') data[0].title = '<img src=x onerror=alert(1)>';
+if (scenario === 'industry') { data[0].category='industry'; data[0].title='[TEST ISOLÉ] Industrie'; }
+window.alert = () => { document.body.dataset.xssExecuted = 'true'; };
+window.fetch = async (input, options = {}) => {
+  const url = new URL(String(input), location.href);
+  if (options.method && options.method !== 'GET') throw new Error('Écritures interdites dans les fixtures.');
+  if (!url.pathname.endsWith('/projects')) throw new Error('Réseau réel interdit dans les fixtures.');
+  if (scenario === 'offline') throw new Error('Panne simulée');
+  if (scenario === 'loading') await new Promise(resolve => setTimeout(resolve, 1200));
+  const result = scenario === 'empty' ? [] : data.filter(project => project.category === url.searchParams.get('category'));
+  return new Response(JSON.stringify({ data:result, meta:{source:'test'} }), { status:200, headers:{'Content-Type':'application/json'} });
 };
 await import('/src/main.jsx');
 </script></body></html>

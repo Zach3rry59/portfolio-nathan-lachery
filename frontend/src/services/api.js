@@ -15,7 +15,7 @@ export async function request(path, options = {}) {
     return body;
   } finally { clearTimeout(timer); }
 }
-export const getProjects = signal => request('/projects', { signal });
+export const getProjects = (category, signal) => request(`/projects?category=${encodeURIComponent(category)}`, { signal });
 export const sendContact = data => request('/contact', { method: 'POST', body: JSON.stringify(data) });
 export function safeUrl(value) {
   try { const url = new URL(value); return ['https:', 'http:'].includes(url.protocol) ? url.href : ''; } catch { return ''; }

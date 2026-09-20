@@ -1,24 +1,24 @@
 import { useEffect, useState } from 'react';
 import { getProjects, projectView } from '../services/api.js';
-import { readProjects, saveProjects, validProjects } from '../services/project-cache.js';
-export function useProjects() {
+import { readProjects, saveProjects, validProjects, referenceFor, sortProjects } from '../services/project-cache.js';
+export function useProjects(category) {
   const [attempt, setAttempt] = useState(0);
-  const [state, setState] = useState(() => {
-    let data;
-    try { data = readProjects(localStorage); } catch { data = readProjects(null); }
-    return { status: 'loading', projects: data.map(projectView) };
-  });
+  const isolated = import.meta.env.DEV && location.pathname.startsWith('/test/');
+  const storage = () => { try { return isolated ? null : localStorage; } catch { return null; } };
+  const [catalogs, setCatalogs] = useState(() => Object.fromEntries(['dev','industry'].map(key => [key, { status:'loading', data:readProjects(storage(), key) || [] }])));
   useEffect(() => {
     const controller = new AbortController();
-    setState(previous => ({ ...previous, status: 'loading' }));
-    getProjects(controller.signal).then(response => {
-      if (!validProjects(response.data)) throw new Error('Réponse invalide.');
-      try { saveProjects(localStorage, response.data); } catch { /* Optional public cache. */ }
-      setState({ status: response.data.length ? 'ready' : 'empty', projects: response.data.map(projectView) });
+    setCatalogs(previous => ({ ...previous, [category]: { ...previous[category], status:'loading' } }));
+    getProjects(category, controller.signal).then(response => {
+      if (!validProjects(response.data) || response.data.some(item => item.category !== category)) throw new Error('Catégorie incohérente.');
+      if (controller.signal.aborted) return;
+      saveProjects(storage(), response.data, category);
+      setCatalogs(previous => ({ ...previous, [category]: { status:response.data.length ? 'ready':'empty', data:sortProjects(response.data) } }));
     }).catch(() => {
-      if (!controller.signal.aborted) setState(previous => ({ ...previous, status: 'fallback' }));
+      if (!controller.signal.aborted) setCatalogs(previous => ({ ...previous, [category]: { status:'fallback', data:readProjects(storage(),category) ?? referenceFor(category) } }));
     });
     return () => controller.abort();
-  }, [attempt]);
-  return { ...state, retry: () => setAttempt(value => value + 1) };
+  }, [category, attempt, isolated]);
+  const current = catalogs[category];
+  return { status:current.status, projects:current.data.map(projectView), retry:() => setAttempt(value => value+1) };
 }

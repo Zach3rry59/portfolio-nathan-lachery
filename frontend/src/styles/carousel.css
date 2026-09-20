@@ -1,0 +1,16 @@
+.project-carousel { outline-offset: 7px; }
+.carousel-stage { position: relative; perspective: 1300px; overflow: clip; touch-action: pan-y; }
+.project-carousel[data-carousel-count]:not([data-carousel-count="1"]) .carousel-stage { cursor: grab; }
+.carousel-stage[data-dragging="true"] { cursor: grabbing; user-select: none; }
+.carousel-panel { width: 100%; transform-origin: center; }
+.carousel-current { position: relative; }
+.carousel-exit { position: absolute; inset: 0; pointer-events: none; animation: project-out .56s cubic-bezier(.22,.7,.25,1) both; }
+.carousel-enter { animation: project-in .56s cubic-bezier(.22,.7,.25,1) both; }
+.carousel-controls { display:flex; justify-content:center; align-items:center; gap:22px; margin-top:16px; }
+.carousel-controls span { font-size:11px; color:var(--muted); min-width:64px; text-align:center; }
+.carousel-controls button { width:44px; height:44px; border:1px solid var(--line); border-radius:50%; background:transparent; color:inherit; cursor:pointer; font-size:20px; }
+.carousel-controls button:hover { border-color:var(--accent); color:var(--accent); }
+@keyframes project-in { from { transform:translate3d(calc(var(--direction) * 85%),0,-130px) scale(.92); opacity:0; } to { transform:translate3d(0,0,0) scale(1); opacity:1; } }
+@keyframes project-out { from { transform:translate3d(var(--from-x),0,0) scale(1); opacity:1; } to { transform:translate3d(calc(var(--direction) * -85%),0,-160px) scale(.92); opacity:0; } }
+body[data-fx="reduced"] .carousel-panel { animation:none; }
+@media(max-width:600px) { .carousel-controls { margin-top:12px; } }

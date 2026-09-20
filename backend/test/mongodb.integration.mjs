@@ -8,8 +8,12 @@ import { AdminSession } from '../src/models/AdminSession.js';
 import { repository } from '../src/services/repository.js';
 import { hashPassword } from '../src/services/password.js';
 import { server } from './helpers.mjs';
+import { seedProjects } from '../src/services/seed-projects.js';
+import { referenceProjects } from '../../shared/projects.js';
 const uri = process.env.MONGODB_TEST_URI;
 test('Real MongoDB: indexes, authentication, CRUD, contact persistence and logout', { skip: !uri }, async t => {
+  assert.equal(process.env.NODE_ENV, 'test', 'NODE_ENV=test obligatoire.');
+  assert.ok(['127.0.0.1','localhost','[::1]'].includes(new URL(uri).hostname), 'MongoDB de test doit être local, jamais Atlas.');
   if (new URL(uri).pathname !== '/portfolio_test') throw new Error('Utiliser exclusivement la base jetable portfolio_test.');
   assert.equal(await connectDatabase(uri),true);
   t.after(async () => { await mongoose.connection.dropDatabase(); await disconnectDatabase(); });
@@ -29,6 +33,12 @@ test('Real MongoDB: indexes, authentication, CRUD, contact persistence and logou
   assert.equal(await Contact.countDocuments(),1);
   assert.equal((await api(`/projects/${data._id}`,'DELETE',undefined,token)).status,204);
   assert.equal(await Project.countDocuments(),0);
+  await seedProjects(Project,referenceProjects);
+  await Project.updateOne({slug:referenceProjects[0].slug}, {title:'Edition admin conservée'});
+  await seedProjects(Project,referenceProjects);
+  assert.equal(await Project.countDocuments(),2);
+  assert.equal((await Project.findOne({slug:referenceProjects[0].slug})).title,'Edition admin conservée');
+  assert.equal(await Project.countDocuments({category:'industry'}),0);
   assert.equal((await api('/auth/logout','POST',undefined,token)).status,204);
   assert.equal(await AdminSession.countDocuments(),0);
   assert.ok((await Contact.collection.indexes()).some(index=>index.expireAfterSeconds===15552000));

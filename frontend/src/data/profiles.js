@@ -1,3 +1,4 @@
+import { newestFirst } from './chronology.js';
 // Informations professionnelles fournies et confirmées par Nathan Lachery.
 // Le BTS est une première année suivie, le TSMI une formation en cours.
 const developmentExperience = {
@@ -32,8 +33,8 @@ export const profiles = {
       { label: '03 / Méthode & outils', items: ['Git', 'Agile / Kanban', 'Authentification', 'Droits d’accès'] },
     ],
     skillsNote: 'Technologies et méthodes mentionnées dans mon CV développeur.',
-    experiences: [developmentExperience, ...industrialExperiences],
-    training: [...developmentTraining, industrialTraining[0]],
+    experiences: newestFirst([developmentExperience, ...industrialExperiences]),
+    training: newestFirst([...developmentTraining, ...industrialTraining]),
     cv: "Nathan Lachery - Concepteur développeur d'applications  - CV professionnel.pdf",
   },
   industrie: {
@@ -49,8 +50,8 @@ export const profiles = {
       { label: '03 / Compétences complémentaires', items: ['Programmation', 'Bases de données'] },
     ],
     skillsNote: 'Acquis du bac professionnel, en cours de consolidation en TSMI.',
-    experiences: [developmentExperience, ...industrialExperiences],
-    training: [...industrialTraining, ...developmentTraining],
+    experiences: newestFirst([developmentExperience, ...industrialExperiences]),
+    training: newestFirst([...developmentTraining, ...industrialTraining]),
     cv: 'Nathan Lachery - Maintenance industrielle - CV professionnel.pdf',
   },
 };

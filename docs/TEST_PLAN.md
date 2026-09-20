@@ -12,20 +12,20 @@ Les tests Node couvrent l’API avec un repository isolé : validation, réponse
 
 ## MongoDB réel et Docker
 
-`pnpm run test:integration` exige `MONGODB_TEST_URI` pointant vers une base nommée exactement `portfolio_test`. Les tests vérifient les écritures, l’unicité des slugs, les contacts, la suppression et les sessions avec Mongoose et MongoDB réels. La base de test est supprimée après l’exécution. Sans URI, ces tests sont marqués ignorés, jamais considérés comme réussis.
+`pnpm run test:integration` exige `NODE_ENV=test` et `MONGODB_TEST_URI` pointant vers une base locale nommée exactement `portfolio_test`. Les hôtes distants, dont Atlas, sont refusés avant connexion. Les tests vérifient les écritures, l’unicité des slugs, les contacts, la suppression et les sessions avec Mongoose et MongoDB réels. Deux passages du seed vérifient son idempotence et la conservation des éditions administrateur. La base de test est supprimée après l’exécution. Sans URI, ces tests sont marqués ignorés, jamais considérés comme réussis.
 
 GitHub Actions démarre MongoDB 8 pour cette suite, construit le frontend, puis construit et démarre Docker Compose. Le contrôle HTTP vérifie que le conteneur communique avec MongoDB ; un contrôle distinct vérifie l’utilisateur non-root. Aucun secret Atlas n’est nécessaire dans la CI.
 
 ## Navigateur
 
-En développement, ouvrir `/test/cinema-check.html` et lancer les contrôles. Le rapport vérifie les deux sens de molette, les positions fractionnaires, le viewport immobile, les changements de profil, FX, les largeurs 320/390/768/1280, les états API vide/lente/indisponible et l’échappement du texte. Les fixtures restent uniquement dans les tests ; elles ne sont pas intégrées au build public ni injectées dans Atlas.
+Lancer `pnpm test:preview`, puis ouvrir `http://127.0.0.1:5174/test/cinema-check.html`. Les onze contrôles ciblés couvrent les boucles, le clavier, les catégories, les états zéro/un/deux projets, le retour vers Contact, le chargement sans flash et la non-exécution XSS. La fixture refuse les écritures et le réseau réel ; son catalogue est cloné, sans accès au cache public. Le cadre est vidé en fin de test.
 
-Compléter par une inspection visuelle desktop et mobile de chaque scène, des menus, du formulaire, des dialogues et de l’admin. Utiliser une vraie interaction molette et le clavier. Une mesure requestAnimationFrame est un indicateur local, pas une garantie de 60 FPS sur chaque appareil.
+`/test/mobile-check.html` fournit un viewport de 390 × 844 dans un iframe et un test d’événements Pointer tactiles simulés. Compléter par un drag souris et une inspection visuelle avec FX. La simulation ne remplace pas un essai sur téléphone physique. Ces pages exigent le mode Vite `test` et sont absentes du build public.
 
 ## Livraison
 
 Vérifier le hash du commit, la réussite CI/CodeQL, les journaux des builds hébergeurs, l’état `/api/health`, le catalogue, les liens CV/EF SET/LinkedIn et le rendu des URL publiques. Effectuer ensuite un nouveau push et constater un nouveau déploiement. Un workflow présent dans Git n’est pas la preuve d’une CI ni d’un déploiement réussis.
 
-## Dernière vérification locale
+## Vérifications ciblées
 
-Le 19 septembre 2026 : 16 tests Node réussis, lint réussi, build réussi, 19 contrôles navigateur réussis. Les résultats Docker, MongoDB d’intégration et production doivent être confirmés séparément lors du déploiement.
+Six tests Node de chronologie/cache/navigation/carousel, un scénario CRUD catégories/order/featured et onze contrôles navigateur ciblés vérifiés localement. Les résultats d’intégration MongoDB, Docker et de livraison sont consultables dans GitHub Actions. Le rendu desktop et mobile doit être vérifié séparément du build.

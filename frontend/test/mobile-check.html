@@ -1,0 +1,15 @@
+<!doctype html><html lang="fr"><meta charset="UTF-8"><title>Vérification mobile isolée</title><style>body{background:#111827;color:white;font:14px system-ui}iframe{width:390px;height:844px;border:1px solid #455;display:block}button{padding:12px;margin:8px}</style><button id="swipe">Tester les événements tactiles</button><output id="result">Prêt.</output><iframe title="Mobile 390 × 844" src="/test/fixture.html?api=normal"></iframe><script type="module">
+if(import.meta.env.MODE!=='test')throw new Error('Serveur test requis.');
+const frame=document.querySelector('iframe');
+frame.onload=()=>{const timer=setInterval(()=>{const doc=frame.contentDocument,link=doc.querySelector('#navigation a[href="#portfolio"]');if(link){clearInterval(timer);link.click();}},50);};
+document.querySelector('#swipe').onclick=async()=>{
+ const doc=frame.contentDocument,win=frame.contentWindow,stage=doc.querySelector('.carousel-stage'),carousel=doc.querySelector('.project-carousel');
+ const capture=stage.setPointerCapture;stage.setPointerCapture=()=>{};
+ try{
+  const before=carousel.dataset.projectIndex;
+  for(const [type,x] of [['pointerdown',300],['pointermove',200],['pointermove',100],['pointerup',100]])stage.dispatchEvent(new win.PointerEvent(type,{pointerId:7,pointerType:'touch',button:0,isPrimary:true,clientX:x,clientY:420,bubbles:true}));
+  await new Promise(resolve=>setTimeout(resolve,650));
+  document.querySelector('#result').textContent=carousel.dataset.projectIndex!==before?'OK — swipe tactile simulé, projet suivant':'ÉCHEC — swipe';
+ }finally{stage.setPointerCapture=capture;}
+};
+</script></html>

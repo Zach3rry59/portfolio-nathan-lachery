@@ -15,7 +15,9 @@ test('Admin login, CRUD, category filters and logout use a revocable session', a
   assert.equal((await (await api('/projects?category=dev')).json()).data.length,0);
   assert.equal((await api('/projects','POST',project,token)).status,409);
   const changed = await api(`/projects/${data._id}`,'PATCH',{ category:'dev', featured:true, order:7 },token);
-  assert.equal((await changed.json()).data.category,'dev');
+  const updated = (await changed.json()).data;
+  assert.equal(updated.category,'dev'); assert.equal(updated.order,7); assert.equal(updated.featured,true);
+  assert.equal((await (await api('/projects?category=industry')).json()).data.length,0);
   assert.equal((await api(`/projects/${data._id}`,'DELETE',undefined,token)).status,204);
   assert.equal((await api(`/projects/${data._id}`)).status,404);
   assert.equal((await api('/auth/logout','POST',undefined,token)).status,204);
