@@ -1,3 +1,4 @@
+import { useCv } from './hooks/useCv.js';
 import { useEffect, useRef, useState } from 'react';
 import { profiles } from './data/profiles.js';
 import { useEffects } from './hooks/useEffects.js';
@@ -14,8 +15,8 @@ export default function App() {
   const [profileKey, setProfileKey] = useState('dev');
   const stageRef = useRef(null);
   const effects = useEffects();
-  const profile = profiles[profileKey];
   const category = profileKey === 'dev' ? 'dev' : 'industry';
+  const profile = useCv(profiles[profileKey], category);
   const projectState = useProjects(category);
   const projects = projectState.projects;
   const hasProjects = projects.length > 0;

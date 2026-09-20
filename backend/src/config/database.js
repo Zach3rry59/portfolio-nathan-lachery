@@ -3,12 +3,13 @@ mongoose.set('bufferCommands', false);
 mongoose.set('autoCreate', false);
 mongoose.set('autoIndex', false);
 let configured = false;
+let initialized = false;
 let retryTimer;
 let stopping = false;
 export function databaseStatus() {
-  return { configured, connected: mongoose.connection.readyState === 1, state: !configured ? 'not_configured' : ['disconnected','connected','connecting','disconnecting'][mongoose.connection.readyState] || 'unknown' };
+  return { configured, connected: initialized && mongoose.connection.readyState === 1, state: !configured ? 'not_configured' : ['disconnected','connected','connecting','disconnecting'][mongoose.connection.readyState] || 'unknown' };
 }
-export async function connectDatabase(uri) {
+export async function connectDatabase(uri, initialize = async () => {}) {
   configured = Boolean(uri);
   if (!uri) return false;
   stopping = false;
@@ -18,11 +19,14 @@ export async function connectDatabase(uri) {
       await model.createCollection();
       await model.createIndexes();
     }
+    await initialize();
+    initialized = true;
     return true;
   }
   catch {
+    initialized = false;
     console.warn('MongoDB indisponible. Nouvelle tentative dans 30 secondes ; écritures désactivées.');
-    if (!stopping) retryTimer = setTimeout(() => { void connectDatabase(uri); }, 30000).unref();
+    if (!stopping) retryTimer = setTimeout(() => { void connectDatabase(uri, initialize); }, 30000).unref();
     return false;
   }
 }

@@ -1,3 +1,6 @@
+import { migrateCv } from '../src/services/migrate-cv.js';
+import { cvModels } from '../src/models/Cv.js';
+import { referenceCv } from '../../shared/cv.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import mongoose from 'mongoose';
@@ -18,6 +21,21 @@ test('Real MongoDB: indexes, authentication, CRUD, contact persistence and logou
   assert.equal(await connectDatabase(uri),true);
   t.after(async () => { await mongoose.connection.dropDatabase(); await disconnectDatabase(); });
   await Promise.all([Project.init(),Contact.init(),AdminSession.init()]);
+  await migrateCv();
+  for(const [kind,Model] of Object.entries(cvModels)){
+    const rows=await Model.find().lean();
+    assert.equal(rows.length,referenceCv[kind].length);
+    for(const entry of referenceCv[kind]){
+      const row=rows.find(value=>String(value._id)===entry._id);
+      for(const [key,value] of Object.entries(entry))if(key!=='_id')assert.deepEqual(row[key],value);
+    }
+  }
+  const first=referenceCv.experiences[0];
+  await cvModels.experiences.updateOne({_id:first._id},{title:'Edition conservée'});
+  await cvModels.training.deleteOne({_id:referenceCv.training[0]._id});
+  await migrateCv();
+  assert.equal((await cvModels.experiences.findById(first._id)).title,'Edition conservée');
+  assert.equal(await cvModels.training.countDocuments(),referenceCv.training.length-1);
   const password = 'Integration-test-password-only';
   const api = await server(t,repository,{ adminEmail:'admin@example.test',adminPasswordHash:await hashPassword(password) });
   const login = await api('/auth/login','POST',{ email:'admin@example.test',password });

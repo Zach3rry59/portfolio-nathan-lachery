@@ -1,3 +1,4 @@
+import { contentRoutes } from './content.js';
 import { Router } from 'express';
 import { rateLimit } from 'express-rate-limit';
 import { controllers } from '../controllers/api.js';
@@ -19,5 +20,6 @@ export function apiRoutes(repository, settings) {
   router.post('/projects', auth.requireAdmin, projectValidation, api.createProject);
   router.patch('/projects/:id', auth.requireAdmin, projectIdValidation, projectValidation, api.updateProject);
   router.delete('/projects/:id', auth.requireAdmin, projectIdValidation, api.deleteProject);
+  contentRoutes(router, repository, auth);
   return router;
 }

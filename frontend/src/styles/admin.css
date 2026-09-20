@@ -27,3 +27,9 @@
 .delete-dialog::backdrop { background: #000b; }
 .admin-note { font-size: 12px; }
 @media (max-width: 600px) { .admin-grid { grid-template-columns: 1fr; } .admin-panel { padding: 20px; } .admin-heading { align-items: start; flex-direction: column; } .admin-shell { padding-inline: 16px; } }
+
+.admin-tabs { display:flex; flex-wrap:wrap; gap:10px; margin-top:28px; }
+.admin-tabs [aria-current="page"] { background:#244458; border-color:#93e2f1; }
+.admin-content-entry { border-bottom:1px solid #334155; padding:24px 0; overflow-wrap:anywhere; }
+.admin-content-entry:last-child { border-bottom:0; }
+.message-body { white-space:pre-wrap; }
