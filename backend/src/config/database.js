@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 mongoose.set('bufferCommands', false);
+mongoose.set('autoCreate', false);
+mongoose.set('autoIndex', false);
 let configured = false;
 let retryTimer;
 let stopping = false;
@@ -10,7 +12,14 @@ export async function connectDatabase(uri) {
   configured = Boolean(uri);
   if (!uri) return false;
   stopping = false;
-  try { await mongoose.connect(uri, { serverSelectionTimeoutMS: 5000, maxPoolSize: 5 }); return true; }
+  try {
+    await mongoose.connect(uri, { serverSelectionTimeoutMS: 5000, maxPoolSize: 5 });
+    for (const model of Object.values(mongoose.models)) {
+      await model.createCollection();
+      await model.createIndexes();
+    }
+    return true;
+  }
   catch {
     console.warn('MongoDB indisponible. Nouvelle tentative dans 30 secondes ; écritures désactivées.');
     if (!stopping) retryTimer = setTimeout(() => { void connectDatabase(uri); }, 30000).unref();
