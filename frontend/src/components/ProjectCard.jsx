@@ -14,7 +14,7 @@ function KeyIllustration({ year }) {
   </>;
 }
 
-export default function ProjectCard({ project }) {
+export default function ProjectCard({ project, onOpen }) {
   const [imageFailed, setImageFailed] = useState(false);
   return <article className="featured-project">
     <div className="project-art" aria-label={project.image && !imageFailed ? 'Aperçu du projet' : 'Illustration conceptuelle du projet, pas une capture de l’application'}>
@@ -24,6 +24,7 @@ export default function ProjectCard({ project }) {
       <div className="project-meta"><span className="mono">{project.isKeyProject ? 'DÉVELOPPEMENT FULL STACK' : 'PROJET'}</span><span className="project-year">{project.date}</span></div>
       <h3>{project.title}</h3><p className="project-context">{project.context}</p><p>{project.description}</p>
       <div className="project-tags"><Tags items={project.stack}/></div>
+      {onOpen && <button className="button project-open" onClick={onOpen} aria-haspopup="dialog">Découvrir le projet <span aria-hidden="true">↗</span></button>}
       {project.repository && <a className="button" href={project.repository} target="_blank" rel="noopener noreferrer">Explorer le code <span aria-hidden="true">↗</span></a>}
       {project.demo && <a className="text-link" href={project.demo} target="_blank" rel="noopener noreferrer">Voir la démo ↗</a>}
       {project.features.length > 0 && <details className="project-details"><summary>Le travail réalisé <span aria-hidden="true">+</span></summary><dl>{project.features.map(([title, text]) => <div key={title}><dt>{title}</dt><dd>{text}</dd></div>)}</dl></details>}

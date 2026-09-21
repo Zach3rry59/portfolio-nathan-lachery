@@ -13,6 +13,8 @@ import { hashPassword } from '../src/services/password.js';
 import { server } from './helpers.mjs';
 import { seedProjects } from '../src/services/seed-projects.js';
 import { referenceProjects } from '../../shared/projects.js';
+import { baseProjects } from '../../shared/projects.js';
+import { migrateProjectDetails } from '../src/services/migrate-project-details.js';
 const uri = process.env.MONGODB_TEST_URI;
 test('Real MongoDB: indexes, authentication, CRUD, contact persistence and logout', { skip: !uri }, async t => {
   assert.equal(process.env.NODE_ENV, 'test', 'NODE_ENV=test obligatoire.');
@@ -51,7 +53,17 @@ test('Real MongoDB: indexes, authentication, CRUD, contact persistence and logou
   assert.equal(await Contact.countDocuments(),1);
   assert.equal((await api(`/projects/${data._id}`,'DELETE',undefined,token)).status,204);
   assert.equal(await Project.countDocuments(),0);
-  await seedProjects(Project,referenceProjects);
+  await seedProjects(Project,baseProjects);
+  await Project.updateOne({slug:baseProjects[1].slug},{description:'Description admin conservée'});
+  await migrateProjectDetails();
+  assert.equal((await Project.findOne({slug:baseProjects[0].slug})).role,referenceProjects[0].role);
+  assert.equal((await Project.findOne({slug:baseProjects[1].slug})).description,'Description admin conservée');
+  const screenshots=[{url:'https://example.test/capture.png',alt:'Capture isolée'}];
+  await Project.updateOne({slug:baseProjects[0].slug},{screenshots},{runValidators:true});
+  assert.deepEqual((await Project.findOne({slug:baseProjects[0].slug}).lean()).screenshots,screenshots);
+  await Project.updateOne({slug:baseProjects[0].slug},{role:'',screenshots:[]});
+  await migrateProjectDetails();
+  assert.equal((await Project.findOne({slug:baseProjects[0].slug})).role,'');
   await Project.updateOne({slug:referenceProjects[0].slug}, {title:'Edition admin conservée'});
   await seedProjects(Project,referenceProjects);
   assert.equal(await Project.countDocuments(),2);

@@ -4,6 +4,9 @@ const { referenceProjects } = await import('../../shared/projects.js');
 const scenario = new URLSearchParams(location.search).get('api') || 'normal';
 const data = structuredClone(referenceProjects);
 if (scenario === 'xss') data[0].title = '<img src=x onerror=alert(1)>';
+if (scenario === 'xss') data[0].description = '<img src=x onerror=alert(1)>';
+if (scenario === 'gallery') data[0].screenshots = [{url:new URL('/mark.svg',location.href).href,alt:'Image de fixture, pas une capture réelle'},{url:new URL('/missing-fixture.png',location.href).href,alt:'Capture indisponible de fixture'}];
+if (scenario === 'minimal') { data.splice(1); Object.assign(data[0],{description:'',context:'',role:'',problem:'',features:[],screenshots:[],technologies:[]}); }
 if (scenario === 'industry') { data[0].category='industry'; data[0].title='[TEST ISOLÉ] Industrie'; }
 window.alert = () => { document.body.dataset.xssExecuted = 'true'; };
 window.fetch = async (input, options = {}) => {

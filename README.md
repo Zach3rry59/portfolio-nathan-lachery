@@ -46,4 +46,4 @@ La route `/admin` permet de créer, modifier et supprimer des projets `dev` ou `
 
 Le formulaire conserve les messages dans MongoDB ; il n’envoie pas d’email. Une panne de la base produit une erreur explicite, jamais une confirmation d’enregistrement. Le lien email reste disponible. La politique de confidentialité est accessible à `/privacy`.
 
-Le visuel du projet SOFIP est une illustration, pas une capture de l’application. Le certificat [EF SET](https://cert.efset.org/ZL3F62) et le profil [LinkedIn](https://www.linkedin.com/in/nathan-lachery/) renvoient aux liens fournis par Nathan.
+Le visuel du projet SOFIP est une illustration, pas une capture de l’application. Le certificat [EF SET](https://cert.efset.org/ZL3F62) et le profil [LinkedIn](https://www.linkedin.com/in/nathan-lachery/) sont accessibles via leurs liens publics respectifs.

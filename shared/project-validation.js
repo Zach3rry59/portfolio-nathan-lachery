@@ -4,8 +4,8 @@ export function httpUrl(value) {
   if (typeof value !== 'string' || value.length > 2048) return false;
   try { const url = new URL(value); return ['http:', 'https:'].includes(url.protocol) && !url.username && !url.password; } catch { return false; }
 }
-const textFields = { title: [2,160], slug: [2,180], shortDescription: [10,500], description: [0,5000], year: [0,30], context: [0,200] };
-const allowed = [...Object.keys(textFields), 'category', 'technologies', 'githubUrl', 'demoUrl', 'imageUrl', 'featured', 'order', 'features'];
+const textFields = { title: [2,160], slug: [2,180], shortDescription: [10,500], description: [0,5000], year: [0,30], context: [0,200], role: [0,1000], problem: [0,1500], challenges: [0,2000], solutions: [0,2000] };
+const allowed = [...Object.keys(textFields), 'category', 'technologies', 'githubUrl', 'demoUrl', 'imageUrl', 'featured', 'order', 'features', 'screenshots'];
 export function validateProject(input, partial = false) {
   const fields = {}, value = {};
   if (!input || typeof input !== 'object' || Array.isArray(input)) return { fields: { form: 'Objet JSON requis.' }, value };
@@ -34,6 +34,10 @@ export function validateProject(input, partial = false) {
   if ('features' in input) {
     if (!Array.isArray(input.features) || input.features.length > 12 || input.features.some(item => !item || typeof item !== 'object' || Object.keys(item).some(key => !['title','description'].includes(key)) || typeof item.title !== 'string' || !item.title.trim() || item.title.length > 100 || typeof item.description !== 'string' || item.description.length > 1000)) fields.features = 'Détails de projet invalides.';
     else value.features = input.features.map(item => ({ title: item.title.trim(), description: item.description.trim() }));
+  }
+  if ('screenshots' in input) {
+    if (!Array.isArray(input.screenshots) || input.screenshots.length > 8 || input.screenshots.some(item => !item || typeof item !== 'object' || Object.keys(item).some(key => !['url','alt'].includes(key)) || !item.url || !httpUrl(item.url) || typeof item.alt !== 'string' || !item.alt.trim() || item.alt.length > 200)) fields.screenshots = '8 captures maximum : URL HTTP(S) et description de 200 caractères maximum.';
+    else value.screenshots = input.screenshots.map(item => ({ url: item.url, alt: item.alt.trim() }));
   }
   return { fields, value };
 }

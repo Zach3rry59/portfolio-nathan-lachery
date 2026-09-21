@@ -1,5 +1,6 @@
 // Réalisations confirmées par Nathan Lachery. Aucun projet de démonstration.
-export const referenceProjects = [{
+import { projectDetails } from './project-details.js';
+export const baseProjects = [{
   _id: '000000000000000000000059',
   title: 'Gestion de clés', slug: 'gestion-de-cles-sofip',
   category: 'dev',
@@ -28,3 +29,4 @@ export const referenceProjects = [{
     { title: 'Livraison', description: 'Backend Docker, tests MongoDB et déploiements automatiques depuis GitHub.' },
   ],
 }];
+export const referenceProjects = baseProjects.map(project => ({ ...project, ...projectDetails[project.slug] }));

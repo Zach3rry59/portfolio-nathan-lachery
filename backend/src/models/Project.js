@@ -9,6 +9,9 @@ const projectSchema = new mongoose.Schema({
   githubUrl: { type: String, validate: httpUrl, default: '' }, demoUrl: { type: String, validate: httpUrl, default: '' }, imageUrl: { type: String, validate: httpUrl, default: '' },
   featured: { type: Boolean, default: false }, order: { type: Number, default: 0, min: 0, max: 10000, validate: Number.isInteger },
   year: { type: String, maxlength: 30 }, context: { type: String, maxlength: 200 },
+  role: { type: String, maxlength: 1000 }, problem: { type: String, maxlength: 1500 },
+  challenges: { type: String, maxlength: 2000 }, solutions: { type: String, maxlength: 2000 },
+  screenshots: { type: [{ _id: false, url: { type: String, required: true, validate: httpUrl }, alt: { type: String, required: true, trim: true, maxlength: 200 } }], default: [], validate: value => value.length <= 8 },
   features: [{ _id: false, title: { type: String, maxlength: 100 }, description: { type: String, maxlength: 1000 } }],
 }, { timestamps: true, versionKey: false, strict: 'throw' });
 projectSchema.index({ category: 1, order: 1, _id: 1 });

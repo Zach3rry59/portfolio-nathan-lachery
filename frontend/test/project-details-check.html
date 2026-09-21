@@ -1,0 +1,34 @@
+<!doctype html><html lang="fr"><meta charset="UTF-8"><title>Fiches projet — tests isolés</title><style>body{background:#10131e;color:white;font:14px system-ui}button{padding:12px;margin:8px}iframe{display:block;width:390px;height:844px;border:1px solid #456}output{display:block;white-space:pre-line}</style>
+<button id="run">Vérifier les fiches et gestes tactiles</button><output id="result">Prêt.</output><iframe title="Fiche mobile 390 × 844" src="/test/fixture.html?api=gallery"></iframe>
+<script type="module">
+if(import.meta.env.MODE!=='test')throw new Error('Serveur test requis.');
+const frame=document.querySelector('iframe'),output=document.querySelector('output');
+const pause=()=>new Promise(resolve=>setTimeout(()=>frame.contentWindow.requestAnimationFrame(()=>frame.contentWindow.requestAnimationFrame(resolve)),650));
+document.querySelector('#run').onclick=async()=>{
+ const doc=frame.contentDocument,win=frame.contentWindow,checks=[];
+ const check=(ok,label)=>{checks.push(`${ok?'OK':'ÉCHEC'} — ${label}`);output.textContent=checks.join('\n');if(!ok)throw new Error(label);};
+ try{
+ doc.querySelector('#navigation a[href="#portfolio"]').click();await pause();
+ let stage=doc.querySelector('.carousel-stage');
+ stage.querySelector('h3').click();await pause();
+ let dialog=doc.querySelector('dialog.project-detail');check(dialog?.open,'SOFIP : ouverture sur clic');
+ check(dialog.textContent.includes('Mon rôle')&&!dialog.textContent.includes('Difficultés techniques'),'Sections présentes uniquement si renseignées');
+ const progress=doc.querySelector('.cinema-stage').dataset.progress;
+ dialog.dispatchEvent(new win.WheelEvent('wheel',{bubbles:true,deltaY:-400}));await pause();
+ check(doc.querySelector('.cinema-stage').dataset.progress===progress,'La fiche ne fait pas avancer la timeline');
+ dialog.querySelector('.detail-gallery button').click();await pause();check(Boolean(doc.querySelector('.detail-zoom')),'Zoom de capture');
+ dialog.dispatchEvent(new win.Event('cancel',{cancelable:true}));await pause();check(!doc.querySelector('.detail-zoom')&&dialog.open,'Échap quitte le zoom avant la fiche');
+ check(doc.activeElement===dialog.querySelector('.detail-gallery button'),'Retour du focus à la capture');
+ dialog.querySelector('.detail-close').click();await pause();check(!doc.querySelector('dialog.project-detail')&&doc.activeElement.classList.contains('project-open'),'Fermeture et retour du focus');
+ const capture=stage.setPointerCapture;stage.setPointerCapture=()=>{};
+ try{for(const [type,x] of [['pointerdown',300],['pointermove',210],['pointermove',80],['pointerup',80]])stage.dispatchEvent(new win.PointerEvent(type,{pointerId:7,pointerType:'touch',button:0,isPrimary:true,clientX:x,clientY:420,bubbles:true}));stage.click();}finally{stage.setPointerCapture=capture;}
+ await pause();check(doc.querySelector('.project-carousel').dataset.projectIndex==='1'&&!doc.querySelector('dialog.project-detail'),'Swipe tactile simulé : suivant sans ouvrir la fiche');
+ stage.querySelector('.project-open').click();await pause();dialog=doc.querySelector('dialog.project-detail');check(dialog?.textContent.includes('Portfolio interactif full-stack'),'Second projet et ouverture après swipe');
+ check(!dialog.querySelector('.detail-gallery'),'Galerie absente sans captures');
+ check(dialog.scrollWidth===dialog.clientWidth,'Mobile : aucun débordement horizontal');
+ dialog.querySelector('.detail-close').click();await pause();
+ doc.querySelector('.profile-toggle').click();await pause();
+ check(!doc.querySelector('.project-carousel')&&!doc.querySelector('#navigation a[href="#portfolio"]'),'Industrie : aucun Portfolio');
+ }catch(error){output.textContent+='\n'+error.message;}
+};
+</script></html>
