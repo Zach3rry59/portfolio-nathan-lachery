@@ -10,7 +10,7 @@ function KeyIllustration({ year }) {
       <div className="key-core"><svg viewBox="0 0 100 100" fill="none"><circle cx="36" cy="35" r="19"/><path d="m49 49 31 31m-11-11 10-10m-1 19 10-10"/><circle cx="33" cy="32" r="4"/></svg></div>
       <span className="system-node node-users">Utilisateurs</span><span className="system-node node-access">Droits d’accès</span><span className="system-node node-live"><i/>Temps réel</span>
     </div>
-    <div className="art-bottom"><strong>Une clé.<br/>Le bon accès.</strong><span className="mono">ILLUSTRATION DU PROJET<br/>CAPTURE RÉELLE À AJOUTER</span></div>
+    <div className="art-bottom"><strong>Une clé.<br/>Le bon accès.</strong><span className="mono">ILLUSTRATION DU PROJET</span></div>
   </>;
 }
 
@@ -18,7 +18,7 @@ export default function ProjectCard({ project, onOpen }) {
   const [imageFailed, setImageFailed] = useState(false);
   return <article className="featured-project">
     <div className="project-art" aria-label={project.image && !imageFailed ? 'Aperçu du projet' : 'Illustration conceptuelle du projet, pas une capture de l’application'}>
-      {project.image && !imageFailed ? <img className="project-image" src={project.image} alt={`Aperçu de ${project.title}`} onError={() => setImageFailed(true)}/> : project.isKeyProject ? <KeyIllustration year={project.date}/> : <div className="generic-art"><strong>{project.title}</strong><span className="mono">APERÇU À AJOUTER</span></div>}
+      {project.image && !imageFailed ? <img className="project-image" src={project.image} alt={`Aperçu de ${project.title}`} loading="lazy" onError={() => setImageFailed(true)}/> : project.isKeyProject ? <KeyIllustration year={project.date}/> : <div className="generic-art"><strong>{project.title}</strong><span className="mono">DÉCOUVRIR LE PROJET</span></div>}
     </div>
     <div className="project-info">
       <div className="project-meta"><span className="mono">{project.isKeyProject ? 'DÉVELOPPEMENT FULL STACK' : 'PROJET'}</span><span className="project-year">{project.date}</span></div>

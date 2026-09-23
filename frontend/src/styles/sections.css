@@ -8,6 +8,8 @@
 .profile-identity h3 { font-size: 24px; letter-spacing: -.025em; line-height: 1.35; max-width: 350px; margin-bottom: 20px; }
 .profile-identity .mono { color: #8b94aa; }
 .profile-copy { color: #afb6c7; font-size: 15px; line-height: 1.85; }
+.profile-contact { margin-left:24px; }
+.timeline-entry[data-relevant="true"] h3 { color:var(--accent); }
 .objective { display: flex; gap: 12px; align-items: baseline; margin-top: 22px; font-size: 13px; color: #dae1ef; }
 .text-link { display: inline-flex; gap: 34px; color: var(--accent); font-size: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(var(--glow), .4); margin-top: 24px; }
 .text-link span { transition: transform .3s; }

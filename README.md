@@ -4,9 +4,11 @@
 
 CV interactif à deux profils, Développement et Industrie. La molette vers le haut avance, vers le bas recule, dans un viewport fixe. Les boutons, le clavier et la progression offrent d’autres moyens de navigation.
 
+Accès candidature : [Développement](https://portfolio-nathan-lachery.pages.dev/dev) · [Maintenance industrielle](https://portfolio-nathan-lachery.pages.dev/maintenance). Chaque entrée sélectionne le profil correspondant et ouvre sa présentation ; les liens CV et Contact sont directement disponibles. La route Maintenance met en avant la recherche de stage TSMI, sans publier de dates de stage non confirmées.
+
 ## Stack
 
-React, Vite, CSS et Node.js/Express. MongoDB avec Mongoose conserve les projets, les messages de contact et les sessions administrateur. Le backend est conteneurisé avec Docker. Le contenu du CV et un catalogue de secours restent disponibles sans API.
+React, Vite, CSS et Node.js/Express. MongoDB avec Mongoose conserve les projets, les expériences, les formations, les groupes de compétences, les messages de contact et les sessions administrateur. Le backend est conteneurisé avec Docker. Le contenu du CV et un catalogue de secours restent disponibles sans API.
 
 ## Démarrage
 
@@ -46,4 +48,10 @@ La route `/admin` permet de créer, modifier et supprimer des projets `dev` ou `
 
 Le formulaire conserve les messages dans MongoDB ; il n’envoie pas d’email. Une panne de la base produit une erreur explicite, jamais une confirmation d’enregistrement. Le lien email reste disponible. La politique de confidentialité est accessible à `/privacy`.
 
-Le visuel du projet SOFIP est une illustration, pas une capture de l’application. Le certificat [EF SET](https://cert.efset.org/ZL3F62) et le profil [LinkedIn](https://www.linkedin.com/in/nathan-lachery/) sont accessibles via leurs liens publics respectifs.
+Les fiches projet détaillent les réalisations et proposent une galerie. Les quatre captures SOFIP montrent l’application originale restaurée en 2026 avec des données fictives ; le projet a été réalisé en stage en 2024. Les champs et sources sont décrits dans [Fiches projet](docs/PROJECT_DETAILS.md).
+
+L’admin gère également les expériences, formations, compétences et messages Contact. Les migrations préservent les éditions existantes ; les suppressions ne sont pas réintroduites au redémarrage. Les notifications email restent désactivées : la consultation se fait dans l’admin.
+
+Cloudflare Pages publie le frontend et Render le backend Docker après la CI GitHub Actions. Le build génère des entrées HTML pour `/dev` et `/maintenance`, leurs métadonnées, canonical, Open Graph, `robots.txt` et `sitemap.xml`. Le domaine public existant est conservé afin de maintenir les liens déjà diffusés.
+
+Le certificat [EF SET](https://cert.efset.org/ZL3F62) et le profil [LinkedIn](https://www.linkedin.com/in/nathan-lachery/) sont accessibles via leurs liens publics respectifs.

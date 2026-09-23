@@ -1,5 +1,6 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { clamp, remapProgress, scenePose, wheelProgress } from './navigation.js';
+import { initialScene } from '../../../shared/public-pages.js';
 
 export function useCinema(ids, full, stageRef) {
   const [active, setActive] = useState('home');
@@ -112,7 +113,7 @@ export function useCinema(ids, full, stageRef) {
       previousY = currentY;
     }
     const touchEnd = () => { previousY = null; };
-    const back = () => navigate(location.hash.slice(1) || 'home', false);
+    const back = () => navigate(location.hash.slice(1) || initialScene(location.pathname), false);
     addEventListener('wheel', wheel, { passive: false });
     addEventListener('keydown', keyboard);
     stageRef.current.addEventListener('touchstart', touchStart, { passive: true });

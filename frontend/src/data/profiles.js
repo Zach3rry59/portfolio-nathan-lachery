@@ -19,7 +19,7 @@ export const profiles = {
     title: ['Comprendre les systèmes.', 'Veiller à leur fiabilité.'],
     role: 'Maintenance industrielle · TSMI en cours',
     introduction: 'Titulaire d’un bac professionnel en maintenance, je prépare le titre de technicien supérieur de maintenance industrielle à l’AFPI. Mon parcours associe pratique mécanique, capacité d’analyse et compétences informatiques.',
-    objective: 'Formation TSMI en cours à Hénin-Beaumont, avec une fin prévue en mai 2027.',
+    objective: 'À la recherche d’un stage en maintenance industrielle dans le cadre de ma formation TSMI à l’AFPI de Hénin-Beaumont.',
     note: 'Du diagnostic mécanique à la logique informatique, une même attention au fonctionnement des systèmes.',
     skills: referenceCv.skills.filter(group => group.category === 'industry'),
     skillsNote: 'Acquis du bac professionnel, en cours de consolidation en TSMI.',
