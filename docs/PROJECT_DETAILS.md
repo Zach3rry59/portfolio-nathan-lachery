@@ -16,7 +16,7 @@ SOFIP : stage de quatre semaines en 2024 et réalisation individuelle. Code exam
 - `src/components/KeysList/KeysList.jsx` : disponibilité des clés et lien vers l’employé.
 - `src/main.jsx`, `src/store.ts`, `src/types/types.ts` : navigation, stores et types métier.
 
-Ces observations ne constituent ni un audit du projet SOFIP ni un récit de difficultés personnelles. Aucune capture réelle n’est présente dans ce dépôt ; l’illustration du carousel est explicitement identifiée comme telle.
+Ces observations ne constituent ni un audit du projet SOFIP ni un récit de difficultés personnelles. Quatre captures réelles fournies par Nathan sont publiées dans `frontend/public/projects/sofip`. Elles présentent l’application restaurée en 2026 avec des données fictives ; le projet original a été réalisé en stage en 2024. La migration `sofip-captures-v1` renseigne uniquement une galerie ou une image encore vides, sans remplacer les captures administrées.
 
 Portfolio : fonctionnalités confirmées dans les composants React, hooks de navigation, routes Express, modèles Mongoose, tests et configurations Docker/GitHub Actions du présent dépôt. Les hébergements sont Cloudflare Pages, Render et MongoDB Atlas. Aucun résultat chiffré ni technologie supplémentaire n’est attribué au projet.
 

@@ -18,8 +18,11 @@ export default function ProjectDetail({ project, onClose, returnFocus }) {
     element.showModal();
     return () => { element.close(); returnFocus?.focus({ preventScroll: true }); };
   }, [returnFocus]);
-  useLayoutEffect(() => { if (zoom !== null) backButton.current?.focus({ preventScroll: true }); }, [zoom]);
-  function closeZoom() { setZoom(null); zoomTrigger.current?.focus({ preventScroll: true }); }
+  useLayoutEffect(() => {
+    if (zoom !== null) backButton.current?.focus({ preventScroll: true });
+    else zoomTrigger.current?.focus({ preventScroll: true });
+  }, [zoom]);
+  function closeZoom() { setZoom(null); }
   const paragraphs = [
     ['Contexte', project.context],
     ['Le besoin', project.problem],

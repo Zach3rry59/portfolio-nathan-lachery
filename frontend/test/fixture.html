@@ -3,6 +3,10 @@ if (import.meta.env.MODE !== 'test') throw new Error('Fixtures réservées au se
 const { referenceProjects } = await import('../../shared/projects.js');
 const scenario = new URLSearchParams(location.search).get('api') || 'normal';
 const data = structuredClone(referenceProjects);
+for (const project of data) {
+  if (project.imageUrl) project.imageUrl = project.imageUrl.replace('https://portfolio-nathan-lachery.pages.dev', location.origin);
+  project.screenshots = (project.screenshots || []).map(shot => ({...shot,url:shot.url.replace('https://portfolio-nathan-lachery.pages.dev',location.origin)}));
+}
 if (scenario === 'xss') data[0].title = '<img src=x onerror=alert(1)>';
 if (scenario === 'xss') data[0].description = '<img src=x onerror=alert(1)>';
 if (scenario === 'gallery') data[0].screenshots = [{url:new URL('/mark.svg',location.href).href,alt:'Image de fixture, pas une capture réelle'},{url:new URL('/missing-fixture.png',location.href).href,alt:'Capture indisponible de fixture'}];

@@ -15,6 +15,8 @@ import { seedProjects } from '../src/services/seed-projects.js';
 import { referenceProjects } from '../../shared/projects.js';
 import { baseProjects } from '../../shared/projects.js';
 import { migrateProjectDetails } from '../src/services/migrate-project-details.js';
+import { migrateProjectCaptures } from '../src/services/migrate-project-captures.js';
+import { sofipScreenshots } from '../../shared/project-details.js';
 const uri = process.env.MONGODB_TEST_URI;
 test('Real MongoDB: indexes, authentication, CRUD, contact persistence and logout', { skip: !uri }, async t => {
   assert.equal(process.env.NODE_ENV, 'test', 'NODE_ENV=test obligatoire.');
@@ -64,6 +66,11 @@ test('Real MongoDB: indexes, authentication, CRUD, contact persistence and logou
   await Project.updateOne({slug:baseProjects[0].slug},{role:'',screenshots:[]});
   await migrateProjectDetails();
   assert.equal((await Project.findOne({slug:baseProjects[0].slug})).role,'');
+  await migrateProjectCaptures();
+  assert.deepEqual((await Project.findOne({slug:baseProjects[0].slug}).lean()).screenshots,sofipScreenshots);
+  await Project.updateOne({slug:baseProjects[0].slug},{screenshots:[]});
+  await migrateProjectCaptures();
+  assert.deepEqual((await Project.findOne({slug:baseProjects[0].slug}).lean()).screenshots,[]);
   await Project.updateOne({slug:referenceProjects[0].slug}, {title:'Edition admin conservée'});
   await seedProjects(Project,referenceProjects);
   assert.equal(await Project.countDocuments(),2);

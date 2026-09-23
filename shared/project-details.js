@@ -1,5 +1,9 @@
 // SOFIP : code vérifié au commit 8af281ebe6f6ca6bf4b8332d376bbb79eb13b83a.
 // Les choix techniques décrivent le code, pas des difficultés personnelles supposées.
+export const sofipScreenshots = [
+  ['centres', 'Gestion des centres'], ['salles-formations', 'Centres, salles et formations'],
+  ['villes-centres', 'Villes et centres'], ['formateurs', 'Liste des formateurs'],
+].map(([file, title]) => ({ url: `https://portfolio-nathan-lachery.pages.dev/projects/sofip/${file}.png`, alt: `${title} — démo restaurée en 2026, données fictives` }));
 export const projectDetails = {
   'gestion-de-cles-sofip': {
     description: 'Application web de gestion de clés réalisée pendant mon stage de développement à la SOFIP en 2024. Elle permet de consulter les clés par centre, de distinguer les clés libres de celles attribuées à un employé et de naviguer entre villes, centres, salles et employés. Le frontend React dialogue avec une API Express et une base MySQL / MariaDB.',
@@ -13,7 +17,8 @@ export const projectDetails = {
       { title: 'Synchronisation temps réel', description: 'Après création, modification ou suppression d’une clé, le serveur émet newKey via Socket.io. React écoute cet événement et recharge les clés depuis l’API.' },
       { title: 'Organisation du frontend', description: 'Pages avec React Router, composants d’administration, hooks de chargement et stores Zustand. Des types TypeScript décrivent les comptes, centres, salles, clés et employés.' },
     ],
-    screenshots: [],
+    imageUrl: sofipScreenshots[0].url,
+    screenshots: sofipScreenshots,
   },
   'portfolio-nathan-lachery': {
     description: 'Portfolio présentant mes parcours Développement et Industrie dans une interface React / Vite. La progression cinématique, le réglage des animations et le carousel infini structurent la consultation. Une API Express et MongoDB alimentent les projets et le contenu du CV, avec un fallback public lorsque l’API est indisponible.',
